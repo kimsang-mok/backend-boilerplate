@@ -1,0 +1,6 @@
+const path = require("path");
+
+module.exports = {
+  config: path.join("dist", "config", "index.js"),
+  "model-path": path.join("dist", "config", "sequelize.js")
+};

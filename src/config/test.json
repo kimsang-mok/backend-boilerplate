@@ -1,0 +1,14 @@
+{
+  "NODE_ENV": "production",
+  "PORT": "3000",
+  "BASE_URL": "https://localhost:3000",
+  "DB": {
+    "USERNAME": "",
+    "PASSWORD": "",
+    "NAME": "",
+    "HOSTNAME": ""
+  },
+  "CORS": {
+    "WHITE_LIST": [""]
+  }
+}
