@@ -4,9 +4,9 @@ import db from "../../config/sequelize";
 import todoItemService from "./todoItem.service";
 
 class TodoItemController extends Controller {
-  constructor() {
-    super(db.TodoItem);
-  }
+  // constructor() {
+  //   super(db.TodoItem);
+  // }
 
   async getTodoItemList(req: Request, res: Response): Promise<void> {
     const response = await todoItemService.getTodoItemList(req.query);

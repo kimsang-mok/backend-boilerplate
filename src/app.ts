@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import Config from "./config";
+import Config from "./config/config";
 import dotenv from "dotenv";
 import cors from "cors";
 import { morganMiddleware } from "./middlewares/morgan";
@@ -13,6 +13,7 @@ const app = express();
 
 app.set("port", Config.PORT);
 app.set("env", process.env.NODE_ENV);
+console.log("Environment: ", process.env.NODE_ENV);
 
 // app.use(cors(corsOptions))
 app.use(cors());

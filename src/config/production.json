@@ -6,7 +6,8 @@
     "USERNAME": "",
     "PASSWORD": "",
     "NAME": "",
-    "HOSTNAME": ""
+    "HOSTNAME": "",
+    "DIALECT": "mysql"
   },
   "CORS": {
     "WHITE_LIST": [""]

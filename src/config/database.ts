@@ -1,6 +1,5 @@
-import { Options } from "sequelize";
-import Config from "./index";
-console.log(Config.DB.NAME);
+import { Options, Dialect } from "sequelize";
+import Config from "./config";
 
 const database: Options = {
   logging: (message) => {
@@ -15,7 +14,7 @@ const database: Options = {
   password: Config.DB.PASSWORD,
   database: Config.DB.NAME,
   host: Config.DB.HOSTNAME,
-  dialect: "mysql",
+  dialect: Config.DB.DIALECT as Dialect,
   dialectOptions: {
     bigNumberStrings: true
   },

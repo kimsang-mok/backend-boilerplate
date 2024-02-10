@@ -1,4 +1,5 @@
 export interface RequestQuery {
+  sort?: string;
   page?: number;
   perpage?: number;
   offset?: number;

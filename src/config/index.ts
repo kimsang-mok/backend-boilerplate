@@ -19,7 +19,7 @@ export const development: ConfigType = {
   password: Config.DB.PASSWORD,
   database: Config.DB.NAME,
   host: Config.DB.HOSTNAME,
-  dialect: "mysql"
+  dialect: Config.DB.DIALECT
 };
 
 export const production: ConfigType = {
@@ -27,13 +27,13 @@ export const production: ConfigType = {
   password: Config.DB.PASSWORD,
   database: Config.DB.NAME,
   host: Config.DB.HOSTNAME,
-  dialect: "mysql",
+  dialect: Config.DB.DIALECT,
   logging: false
 };
 
 export const test: ConfigTest = {
-  dialect: "sqlite",
-  storage: ":memory:"
+  dialect: Config.DB.DIALECT,
+  storage: Config.DB.NAME
 };
 
 export default Config;

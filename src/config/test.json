@@ -1,12 +1,13 @@
 {
-  "NODE_ENV": "production",
+  "NODE_ENV": "test",
   "PORT": "3000",
   "BASE_URL": "https://localhost:3000",
   "DB": {
     "USERNAME": "",
     "PASSWORD": "",
-    "NAME": "",
-    "HOSTNAME": ""
+    "NAME": ":memory:",
+    "HOSTNAME": "",
+    "DIALECT": "sqlite"
   },
   "CORS": {
     "WHITE_LIST": [""]
