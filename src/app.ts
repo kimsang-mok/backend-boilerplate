@@ -5,7 +5,7 @@ import cors from "cors";
 import { morganMiddleware } from "./middlewares/morgan";
 import compression from "compression";
 import notFoundMiddleware from "./middlewares/notFound";
-import todoItemRoute from "./modules/todos/todoItemRoute";
+import todoItemRoute from "./modules/todos/todoItem.route";
 
 dotenv.config();
 

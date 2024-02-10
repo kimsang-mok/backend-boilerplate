@@ -23,7 +23,7 @@ export default function todoItemFactory(sequelize: Sequelize): typeof TodoItem {
         allowNull: false
       },
       description: {
-        type: new DataTypes.TEXT(),
+        type: DataTypes.TEXT,
         allowNull: true
       },
       isCompleted: {
@@ -38,7 +38,8 @@ export default function todoItemFactory(sequelize: Sequelize): typeof TodoItem {
     },
     {
       sequelize,
-      tableName: "todoItem",
+      tableName: "todos",
+      paranoid: true,
       timestamps: true
     }
   );

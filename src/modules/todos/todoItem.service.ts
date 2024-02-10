@@ -107,7 +107,7 @@ class TodoItemService {
       }
 
       response.data = await this.model.findAll(options);
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       return catchResponse(err);
     }
@@ -124,7 +124,7 @@ class TodoItemService {
     try {
       const result: any = await this.model.create(body);
       response.data = result.toJSON();
-      return Promise.resolve(response);
+      return response;
     } catch (err) {
       return catchResponse(err);
     }

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Controller from "../../config/controller";
 import db from "../../config/sequelize";
-import todoItemService from "./todoItemService";
+import todoItemService from "./todoItem.service";
 
 class TodoItemController extends Controller {
   constructor() {
