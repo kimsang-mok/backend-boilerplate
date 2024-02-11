@@ -60,5 +60,11 @@
     "tsc-hooks": "^1.1.2",
     "tslint": "^6.1.3",
     "typescript": "^5.3.3"
+  },
+  "_moduleAliases": {
+    "@modules": "dist/modules",
+    "@middlewares": "dist/middlewares",
+    "@utils": "dist/utils",
+    "@config": "dist/config"
   }
 }

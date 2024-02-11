@@ -13,6 +13,8 @@ class TodoItemService {
 
   async getTodoItemList(query: RequestQuery): Promise<ResponseObject> {
     const apiFeatures = new APIFeatures(this.model, query)
+      .search()
+      .filter()
       .sort()
       .limitFields()
       .paginate();

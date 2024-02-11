@@ -22,3 +22,7 @@ interface ResponseObject {
   data: any[];
   errors?: Object[];
 }
+
+interface AnyRecord {
+  [key: string]: any;
+}

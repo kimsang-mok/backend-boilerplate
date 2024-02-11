@@ -4,3 +4,4 @@ dist/
 .vscode/
 logs/
 src/config/development.json
+coverage/

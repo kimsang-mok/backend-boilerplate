@@ -1,10 +1,12 @@
 import { Sequelize } from "sequelize";
-import todoItemFactory, { TodoItem } from "../modules/todos/todoItem.model";
+import taskFactory, { Task } from "@modules/tasks/task.model";
+import groupFactory, { Group } from "@modules/groups/group.model";
 import dbConfig from "./database";
 
 export type DB = {
   sequelize: Sequelize;
-  TodoItem: typeof TodoItem;
+  Task: typeof Task;
+  Group: typeof Group;
   [key: string]: any;
 };
 
@@ -26,10 +28,19 @@ if (dbConfig.database && dbConfig.username) {
 
 const db: DB = {
   sequelize,
-  TodoItem: todoItemFactory(sequelize)
+  Task: taskFactory(sequelize),
+  Group: groupFactory(sequelize)
 };
 
-console.log("Type of todo factory", typeof db.TodoItem);
+/**
+ * Define associations in the database setup file, rather than directly within model files:
+ * 1. Single source of truth for how models relate to each other (Centralized Management)
+ * 2. Avoid circular dependencies (two or more models depend on each other)
+ */
+
+// establish one-to-many relationship between Group and Task
+db.Task.belongsTo(db.Group, { foreignKey: "groupId", as: "group" });
+db.Group.hasMany(db.Task, { foreignKey: "groupId", as: "tasks" });
 
 Object.values(db).forEach((model: any) => {
   if (model.associate) {
