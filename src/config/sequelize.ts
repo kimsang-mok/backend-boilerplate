@@ -1,12 +1,12 @@
 import { Sequelize } from "sequelize";
 import taskFactory, { Task } from "@modules/tasks/task.model";
-import groupFactory, { Group } from "@modules/groups/group.model";
+import taskGroupFactory, { TaskGroup } from "@modules/groups/group.model";
 import dbConfig from "./database";
 
 export type DB = {
   sequelize: Sequelize;
   Task: typeof Task;
-  Group: typeof Group;
+  TaskGroup: typeof TaskGroup;
   [key: string]: any;
 };
 
@@ -29,7 +29,7 @@ if (dbConfig.database && dbConfig.username) {
 const db: DB = {
   sequelize,
   Task: taskFactory(sequelize),
-  Group: groupFactory(sequelize)
+  TaskGroup: taskGroupFactory(sequelize)
 };
 
 /**
@@ -39,8 +39,8 @@ const db: DB = {
  */
 
 // establish one-to-many relationship between Group and Task
-db.Task.belongsTo(db.Group, { foreignKey: "groupId", as: "group" });
-db.Group.hasMany(db.Task, { foreignKey: "groupId", as: "tasks" });
+db.Task.belongsTo(db.TaskGroup, { foreignKey: "groupId", as: "taskGroup" });
+db.TaskGroup.hasMany(db.Task, { foreignKey: "groupId", as: "tasks" });
 
 Object.values(db).forEach((model: any) => {
   if (model.associate) {

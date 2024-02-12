@@ -7,7 +7,7 @@ export class Task extends Model {
   isCompleted!: boolean;
   deadline?: Date;
   priorityLevel?: number;
-  groupId!: number; // Foreign key to associate with Group model
+  groupId!: number;
   readonly createdAt!: Date;
   readonly updatedAt!: Date;
   readonly deletedAt!: Date;
@@ -50,14 +50,18 @@ export default function (sequelize: Sequelize): typeof Task {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: "groups", // This is the table name of the Group model
+          model: "taskGroups",
           key: "id"
-        }
+        },
+        onDelete: "CASCADE" // enable delete cascading
       }
     },
     {
       sequelize,
       tableName: "tasks",
+      indexes: [
+        { unique: true, fields: ["title", "groupId"] } // composite unique index
+      ],
       paranoid: true,
       timestamps: true
     }

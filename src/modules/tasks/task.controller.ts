@@ -2,11 +2,20 @@ import Controller from "@config/controller";
 import { Request, Response } from "express";
 import taskService from "./task.service";
 
-class taskController extends Controller {
-  async getTaskList(req: Request, res: Response): Promise<void> {
-    const response = await taskService.getTaskList(req.query);
-    res.status(response.status_code).json(response);
+@AutoBind
+class TaskController extends Controller {
+  async getTasks(req: Request, res: Response): Promise<void> {
+    const result = await taskService.getTasks(req.query);
+    this.ok(res, result);
   }
+  createTask = Controller.catchAsync(async (req: Request, res: Response) => {
+    const result = await taskService.createTask(req.body);
+    this.ok(res, result);
+  });
+  getTaskById = Controller.catchAsync(async (req: Request, res: Response) => {
+    const result = await taskService.getTaskById(req.params.id);
+    this.ok(res, result);
+  });
 }
 
-export default taskController
+export default new TaskController();

@@ -1,5 +1,7 @@
 {
-  "hooks": ["copy-files"],
+  "hooks": [
+    "copy-files"
+  ],
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
@@ -11,12 +13,22 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      // "*": ["node_modules/*", "src/types/*"],
-      "@modules/*": ["src/modules/*"],
-      "@middlewares/*": ["src/middlewares/*"],
-      "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"]
-    }
+      "@modules/*": [
+        "src/modules/*"
+      ],
+      "@middlewares/*": [
+        "src/middlewares/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ]
+    },
+    "experimentalDecorators": true
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

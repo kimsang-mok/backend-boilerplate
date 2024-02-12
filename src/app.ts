@@ -4,8 +4,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { morganMiddleware } from "./middlewares/morgan";
 import compression from "compression";
+import "./utils/autobind";
+import v1Route from "./route";
+import { converter, notFound } from "@middlewares/error";
 import notFoundMiddleware from "./middlewares/notFound";
-import todoItemRoute from "./modules/todos/todoItem.route";
 
 dotenv.config();
 
@@ -27,8 +29,10 @@ app.get("/api/v1", (req: Request, res: Response) => {
   res.status(200).json({ name: "Kimsang", age: 21 });
 });
 
-app.use("/api/v1/todo", todoItemRoute);
+app.use("/api/v1", v1Route);
 
+app.use(notFound);
 app.use("*", notFoundMiddleware());
+app.use(converter);
 
 export default app;

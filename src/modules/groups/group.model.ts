@@ -1,7 +1,6 @@
 import { Model, DataTypes, Sequelize } from "sequelize";
-import { Task } from "@modules/tasks/task.model";
 
-export class Group extends Model {
+export class TaskGroup extends Model {
   id!: number;
   name!: string;
   readonly createdAt!: Date;
@@ -9,11 +8,11 @@ export class Group extends Model {
   readonly deletedAt!: Date;
 }
 
-export default function (sequelize: Sequelize): typeof Group {
-  Group.init(
+export default function (sequelize: Sequelize): typeof TaskGroup {
+  TaskGroup.init(
     {
       id: {
-        type: DataTypes.NUMBER.UNSIGNED,
+        type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true
       },
@@ -24,11 +23,12 @@ export default function (sequelize: Sequelize): typeof Group {
     },
     {
       sequelize,
-      tableName: "groups",
+      tableName: "taskGroups",
+      indexes: [{ unique: true, fields: ["name"] }],
       paranoid: true,
       timestamps: true
     }
   );
 
-  return Group;
+  return TaskGroup;
 }

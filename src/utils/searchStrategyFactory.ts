@@ -1,5 +1,6 @@
 import { Model, WhereOptions, Op } from "sequelize";
-import { TodoItem } from "../modules/todos/todoItem.model";
+import { Task } from "@modules/tasks/task.model";
+import { TaskGroup } from "@modules/groups/group.model";
 
 export type SearchStrategyType = "default" | "custom";
 
@@ -50,7 +51,8 @@ class CustomSearchStrategy implements SearchStrategy {
 
 class SearchStrategyFactory {
   private static strategies = new Map<typeof Model, string>([
-    [TodoItem, "title"]
+    [Task, "title"],
+    [TaskGroup, "name"]
     // add other model-to-field mappings here
   ]);
   static getSearchStrategy<T extends Model>(
