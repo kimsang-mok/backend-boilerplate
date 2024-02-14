@@ -1,8 +1,28 @@
 import db from "@config/sequelize";
-import { RequestQuery } from "src/interfaces/http";
-import APIFeatures from "@utils/APIFeatures";
 import { Task } from "@modules/tasks/task.model";
+import Service from "@config/service";
+import { TaskGroup } from "./group.model";
 
+class GroupService extends Service<TaskGroup> {
+  protected model = db.TaskGroup;
+
+  async getById(id: string): Promise<TaskGroup> {
+    const result = await this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: Task,
+          as: "tasks",
+          attributes: { exclude: ["createdAt", "updatedAt", "deletedAt"] }
+        }
+      ]
+    });
+    return result;
+  }
+}
+
+export default new GroupService();
+/*
 class GroupService {
   private model;
 
@@ -61,3 +81,4 @@ class GroupService {
 }
 
 export default new GroupService();
+*/

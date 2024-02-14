@@ -10,7 +10,7 @@ global.AutoBind = function (target: any) {
   // new constructor behaviour
   const f: any = function (...args: any[]) {
     const result = new original(...args);
-    // Auto bind methods
+    // auto bind methods
     for (const key of Object.getOwnPropertyNames(
       Object.getPrototypeOf(result)
     )) {

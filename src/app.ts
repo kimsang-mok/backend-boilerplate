@@ -7,7 +7,7 @@ import compression from "compression";
 import "./utils/autobind";
 import v1Route from "./route";
 import { converter, notFound } from "@middlewares/error";
-import notFoundMiddleware from "./middlewares/notFound";
+import localeMiddleware from "@middlewares/locale";
 
 dotenv.config();
 
@@ -24,15 +24,11 @@ app.use(morganMiddleware);
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.get("/api/v1", (req: Request, res: Response) => {
-  res.status(200).json({ name: "Kimsang", age: 21 });
-});
+app.use(localeMiddleware());
 
 app.use("/api/v1", v1Route);
 
 app.use(notFound);
-app.use("*", notFoundMiddleware());
 app.use(converter);
 
 export default app;

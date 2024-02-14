@@ -36,6 +36,8 @@ export const morganMiddleware = morgan((tokens, req, res) => {
   // If the status code is less than 400, log the message as an informational log.
   if (statusCode < 400) {
     logger.info(logMessage);
+  } else {
+    logger.info(logMessage); // Log as informational for other status codes
   }
 
   // Return `undefined` to indicate that logging is handled internally.

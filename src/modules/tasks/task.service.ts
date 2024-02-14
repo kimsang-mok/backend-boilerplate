@@ -1,9 +1,30 @@
 import db from "@config/sequelize";
-import APIFeatures from "@utils/APIFeatures";
-import { RequestQuery } from "src/interfaces/http";
+// import APIFeatures from "@utils/APIFeatures";
+// import { RequestQuery } from "src/interfaces/http";
 import { TaskGroup } from "@modules/groups/group.model";
+import Service from "@config/service";
 
-class taskService {
+class TaskService extends Service<TaskGroup> {
+  protected model = db.Task;
+
+  async getById(id: string): Promise<any> {
+    const result = await this.model.findByPk(id, {
+      include: [
+        {
+          model: TaskGroup,
+          as: "taskGroup", // this alias must match the alias used in the association definition
+          attributes: ["name"]
+        }
+      ]
+    });
+    return result;
+  }
+}
+
+export default new TaskService();
+
+/*
+class TaskService {
   private model: any;
 
   constructor() {
@@ -57,4 +78,5 @@ class taskService {
   }
 }
 
-export default new taskService();
+export default new TaskService();
+*/

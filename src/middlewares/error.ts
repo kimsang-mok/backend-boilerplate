@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { UniqueConstraintError, ValidationError } from "sequelize";
 import httpStatus from "http-status";
 import APIError from "../utils/APIError";
+import locale from "i18n";
 
 // error handling middleware
 const handler = (
@@ -46,7 +47,7 @@ const converter = (
       errors: [{ field: err.fields, message: err.message }]
     });
   } else if (err instanceof ValidationError) {
-    // Handle SequelizeValidationError
+    // handle SequelizeValidationError
     convertedError = new APIError({
       status: httpStatus.BAD_REQUEST,
       message: "Validation error.",
@@ -57,17 +58,26 @@ const converter = (
         value: errorItem.value
       }))
     });
+  } else if (err.name === "SequelizeForeignKeyConstraintError") {
+    // handle invalid foreign key exception
+    convertedError = new APIError({
+      status: httpStatus.BAD_REQUEST,
+      message: "Foreign key constraint violation.",
+      errors: [
+        {
+          message:
+            "A referenced entity does not exist or the operation violates the constraint rules.",
+          type: "ForeignKeyConstraintError"
+        }
+      ]
+    });
   } else {
     convertedError = new APIError({
       status: err.status || httpStatus.INTERNAL_SERVER_ERROR,
-      message: err.message,
-      errors: [err]
+      message: locale.__("Internal server error"),
+      errors: [err.message ? { message: err.message } : {}]
     });
   }
-
-  // Multer error
-  if (["LIMIT_FILE_SIZE", "LIMIT_UNEXPECTED_FILE"].includes(err.code))
-    convertedError.status = httpStatus.BAD_REQUEST;
 
   return handler(convertedError, req, res, next);
 };
@@ -76,7 +86,8 @@ const converter = (
 const notFound = (req: Request, res: Response, next: NextFunction) => {
   const err = new APIError({
     status: httpStatus.NOT_FOUND,
-    message: "Not found"
+    message: "Not found",
+    errors: []
   });
   return handler(err, req, res, next);
 };
