@@ -34,3 +34,5 @@ const configs: { [key in ConfigEnvironments]: ConfigType } = {
 const Config: ConfigType = configs[env];
 
 export default Config;
+
+

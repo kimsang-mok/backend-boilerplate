@@ -1,11 +1,10 @@
-import db from "@config/sequelize";
+import db, { syncDB } from "@config/sequelize";
 import { TaskGroup } from "@modules/groups/group.model";
 import groupService from "./group.service";
 import app from "../../app";
 import supertest from "supertest";
 import { Sequelize } from "sequelize";
 
-// Mock the db.TaskGroup model
 jest.mock("@config/sequelize", () => ({
   TaskGroup: {
     findOne: jest.fn()
@@ -20,10 +19,10 @@ describe("GroupService", () => {
         name: "Test Group",
         createdAt: new Date(),
         updatedAt: new Date(),
-        deletedAt: null
+        deletedAt: undefined
       } as unknown as TaskGroup;
 
-      // Mock the findOne method to return the mock group data
+      // mock the findOne method to return the mock group data
       (db.TaskGroup.findOne as jest.Mock).mockResolvedValue(mockGroupData);
 
       const group = await groupService.getById("1");
@@ -32,7 +31,7 @@ describe("GroupService", () => {
         where: { id: "1" },
         include: [
           {
-            model: expect.anything(), // Since Task model is not mocked here, we use expect.anything()
+            model: expect.anything(), // since Task model is not mocked here, we use expect.anything()
             as: "tasks",
             attributes: {
               exclude: ["createdAt", "updatedAt", "deletedAt"]
@@ -45,30 +44,14 @@ describe("GroupService", () => {
   });
 });
 
-// Write the tests
 describe("createGroupValidator", () => {
   let mockedSequelize: Sequelize;
 
-  beforeEach(async () => {
-    mockedSequelize = new Sequelize({
-      database: "riem_app_test",
-      dialect: "sqlite",
-      storage: ":memory:", // Use an in-memory database for testing
-      logging: false
-    });
-    await mockedSequelize.sync({ force: true });
-  });
-
-  afterEach(async () => {
-    jest.clearAllMocks();
-    await mockedSequelize.close();
-  });
-
   it("should validate that the group name is not empty and has at least 3 characters", async () => {
-    // Test with invalid data
+    // test with invalid data
     const resultWithInvalidData = await supertest(app)
       .post("/api/v1/groups")
-      .send({ name: "ab" }); // Less than 3 characters
+      .send({ name: "ab" });
     expect(resultWithInvalidData.status).toBe(422);
     expect(resultWithInvalidData.body.errors).toEqual([
       {

@@ -48,7 +48,7 @@ Object.values(db).forEach((model: any) => {
   }
 });
 
-const syncDB = async () => {
+export const syncDB = async () => {
   try {
     await sequelize.sync({ alter: true });
     console.log("DB connection successful");
@@ -60,4 +60,5 @@ const syncDB = async () => {
 
 syncDB();
 
+export { sequelize };
 export default db;
