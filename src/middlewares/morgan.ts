@@ -19,27 +19,29 @@ import { logger } from "../utils/winstonLogger";
  * The custom middleware function for logging HTTP requests.
  * @type {MorganMiddleware}
  */
-export const morganMiddleware = morgan((tokens, req, res) => {
-  // Construct the log message.
-  const logMessage = `[${tokens.method(req, res)}] ${tokens.url(
-    req,
-    res
-  )} | ${tokens.status(req, res)}
+export const morganMiddleware = () => {
+  return morgan((tokens, req, res) => {
+    // Construct the log message.
+    const logMessage = `[${tokens.method(req, res)}] ${tokens.url(
+      req,
+      res
+    )} | ${tokens.status(req, res)}
 	 | ${tokens.res(req, res, "content-length")} - ${tokens["response-time"](
-    req,
-    res
-  )} ms |
+     req,
+     res
+   )} ms |
 	[Response] `;
 
-  // Check the response status code.
-  const statusCode = res.statusCode;
-  // If the status code is less than 400, log the message as an informational log.
-  if (statusCode < 400) {
-    logger.info(logMessage);
-  } else {
-    logger.info(logMessage); // Log as informational for other status codes
-  }
+    // Check the response status code.
+    const statusCode = res.statusCode;
+    // If the status code is less than 400, log the message as an informational log.
+    if (statusCode < 400) {
+      logger.info(logMessage);
+    } else {
+      logger.info(logMessage); // Log as informational for other status codes
+    }
 
-  // Return `undefined` to indicate that logging is handled internally.
-  return undefined;
-});
+    // Return `undefined` to indicate that logging is handled internally.
+    return undefined;
+  });
+};
