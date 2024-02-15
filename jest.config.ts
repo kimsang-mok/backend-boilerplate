@@ -9,6 +9,7 @@ const config: Config.InitialOptions = {
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     prefix: "<rootDir>/"
   }),
+  testPathIgnorePatterns: ["<rootDir>/dist/"],
   transform: {
     "^.+\\.tsx?$": "ts-jest"
   },
