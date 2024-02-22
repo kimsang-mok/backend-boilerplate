@@ -1,7 +1,7 @@
 {
   "NODE_ENV": "production",
   "PORT": "3000",
-  "BASE_URL": "https://localhost:3000",
+  "BASE_URL": "http://localhost:3000",
   "DB": {
     "USERNAME": "",
     "PASSWORD": "",
@@ -10,6 +10,6 @@
     "DIALECT": "mysql"
   },
   "CORS": {
-    "WHITE_LIST": [""]
+    "WHITE_LIST": ["http://localhost:5173"]
   }
 }

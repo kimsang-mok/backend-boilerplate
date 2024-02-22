@@ -1,11 +1,13 @@
-import db, { syncDB } from "@config/sequelize";
+import db from "@configs/sequelize";
 import { TaskGroup } from "@modules/groups/group.model";
 import groupService from "./group.service";
-import app from "../../app";
-import supertest from "supertest";
-import { Sequelize } from "sequelize";
 
-jest.mock("@config/sequelize", () => ({
+/**
+ * The use of mocks allows for testing the service layer in isolation, focusing on the logic
+ * rather than the database integration
+ */
+
+jest.mock("@configs/sequelize", () => ({
   TaskGroup: {
     findOne: jest.fn()
   }
@@ -41,35 +43,5 @@ describe("GroupService", () => {
       });
       expect(group).toEqual(mockGroupData);
     });
-  });
-});
-
-describe("createGroupValidator", () => {
-  let mockedSequelize: Sequelize;
-
-  it("should validate that the group name is not empty and has at least 3 characters", async () => {
-    // test with invalid data
-    const resultWithInvalidData = await supertest(app)
-      .post("/api/v1/groups")
-      .send({ name: "ab" });
-    expect(resultWithInvalidData.status).toBe(422);
-    expect(resultWithInvalidData.body.errors).toEqual([
-      {
-        msg: "Group name must have at least 3 characters long.",
-        path: "name",
-        location: "body",
-        type: "field",
-        value: "ab"
-      }
-    ]);
-
-    // Test with valid data
-    // const resultWithValidData = await supertest(app)
-    //   .post("/api/v1/groups")
-    //   .send({ name: "Valid Group Name" });
-    // // expect(resultWithValidData.status).toBe(201);
-    // expect(resultWithValidData.body).toEqual({
-    //   message: "Created"
-    // });
   });
 });

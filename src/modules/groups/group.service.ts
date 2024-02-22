@@ -1,6 +1,6 @@
-import db from "@config/sequelize";
+import db from "@configs/sequelize";
 import { Task } from "@modules/tasks/task.model";
-import Service from "@config/service";
+import Service from "@configs/service";
 import { TaskGroup } from "./group.model";
 
 class GroupService extends Service<TaskGroup> {
@@ -17,6 +17,9 @@ class GroupService extends Service<TaskGroup> {
         }
       ]
     });
+    if (!result) {
+      this.handleNotFound();
+    }
     return result;
   }
 }

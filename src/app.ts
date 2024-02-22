@@ -1,5 +1,5 @@
 import express from "express";
-import Config from "./config/config";
+import Config from "./configs";
 import dotenv from "dotenv";
 import cors from "cors";
 import { morganMiddleware } from "./middlewares/morgan";
@@ -8,10 +8,15 @@ import "./utils/autobind";
 import v1Route from "./route";
 import { converter, notFound } from "@middlewares/error";
 import localeMiddleware from "@middlewares/locale";
+import { syncDB } from "@configs/sequelize";
 
 dotenv.config();
 
 const app = express();
+
+if (process.env.NODE_ENV !== "test") {
+  syncDB();
+}
 
 app.set("port", Config.PORT);
 app.set("env", process.env.NODE_ENV);

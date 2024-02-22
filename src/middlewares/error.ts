@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { UniqueConstraintError, ValidationError } from "sequelize";
 import httpStatus from "http-status";
-import APIError from "../utils/APIError";
+import APIError from "@utils/APIError";
 import locale from "i18n";
 
 // error handling middleware
@@ -26,6 +26,49 @@ const handler = (
   res.status(err.status).json(response);
 };
 
+// utility function to create APIError instances
+const createApiError = (status: number, message: string, errors: any = []) => {
+  return new APIError({ status, message, errors });
+};
+
+// separate functions for handling specific errors
+const handleApiError = (err: any) => err;
+
+const handleExpressValidationError = (err: any) =>
+  createApiError(
+    httpStatus.UNPROCESSABLE_ENTITY,
+    "Data submitted is invalid",
+    err.array()
+  );
+
+const handleUniqueConstraintError = (err: any) =>
+  createApiError(
+    httpStatus.CONFLICT,
+    "Database error: Unique constraint violation. (Duplicate data)",
+    [{ field: err.fields, message: err.message }]
+  );
+
+const handleValidationError = (err: any) =>
+  createApiError(
+    httpStatus.BAD_REQUEST,
+    "Database Validation error.",
+    err.errors.map((errorItem: any) => ({
+      message: errorItem.message,
+      type: errorItem.type,
+      path: errorItem.path,
+      value: errorItem.value
+    }))
+  );
+
+const handleForeignKeyConstraintError = (err: any) =>
+  createApiError(httpStatus.BAD_REQUEST, "Foreign key constraint violation.", [
+    {
+      message:
+        "A referenced entity does not exist or the operation violates the constraint rules.",
+      type: "ForeignKeyConstraintError"
+    }
+  ]);
+
 /**
  * Convert other types of error (ex: db error) into APIerror for consistent response
  */
@@ -34,51 +77,21 @@ const converter = () => {
     let convertedError: APIError;
 
     if (err instanceof APIError) {
-      convertedError = err;
+      convertedError = handleApiError(err);
     } else if (err.type === "Express Validation Error") {
-      convertedError = new APIError({
-        status: httpStatus.UNPROCESSABLE_ENTITY,
-        message: "Data submitted is invalid",
-        errors: err.array()
-      });
+      convertedError = handleExpressValidationError(err);
     } else if (err instanceof UniqueConstraintError) {
-      // handle unique constraint error
-      convertedError = new APIError({
-        status: httpStatus.CONFLICT, // 409 conflict is often used for unique constraint violations
-        message: "Database error: Unique constraint violation.(Duplicate data)",
-        errors: [{ field: err.fields, message: err.message }]
-      });
+      convertedError = handleUniqueConstraintError(err);
     } else if (err instanceof ValidationError) {
-      // handle SequelizeValidationError
-      convertedError = new APIError({
-        status: httpStatus.BAD_REQUEST,
-        message: "Database Validation error.",
-        errors: err.errors.map((errorItem) => ({
-          message: errorItem.message,
-          type: errorItem.type,
-          path: errorItem.path,
-          value: errorItem.value
-        }))
-      });
+      convertedError = handleValidationError(err);
     } else if (err.name === "SequelizeForeignKeyConstraintError") {
-      // handle invalid foreign key exception
-      convertedError = new APIError({
-        status: httpStatus.BAD_REQUEST,
-        message: "Foreign key constraint violation.",
-        errors: [
-          {
-            message:
-              "A referenced entity does not exist or the operation violates the constraint rules.",
-            type: "ForeignKeyConstraintError"
-          }
-        ]
-      });
+      convertedError = handleForeignKeyConstraintError(err);
     } else {
-      convertedError = new APIError({
-        status: err.status || httpStatus.INTERNAL_SERVER_ERROR,
-        message: locale.__("Internal server error"),
-        errors: [err.message ? { message: err.message } : {}]
-      });
+      convertedError = createApiError(
+        err.status || httpStatus.INTERNAL_SERVER_ERROR,
+        locale.__("Internal server error"),
+        [err.message ? { message: err.message } : {}]
+      );
     }
 
     return handler(convertedError, req, res, next);

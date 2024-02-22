@@ -1,11 +1,24 @@
-import db from "@config/sequelize";
+import db from "@configs/sequelize";
 // import APIFeatures from "@utils/APIFeatures";
 // import { RequestQuery } from "src/interfaces/http";
 import { TaskGroup } from "@modules/groups/group.model";
-import Service from "@config/service";
+import Service from "@configs/service";
+import { RequestQuery } from "src/interfaces/http";
+import APIFeatures from "@utils/APIFeatures";
 
 class TaskService extends Service<TaskGroup> {
   protected model = db.Task;
+
+  async get(query: RequestQuery): Promise<any> {
+    const apiFeatures = new APIFeatures(this.model, query)
+      // .search("fulltext")
+      .search("default")
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    return apiFeatures.execute();
+  }
 
   async getById(id: string): Promise<any> {
     const result = await this.model.findByPk(id, {

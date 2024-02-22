@@ -19,6 +19,16 @@ type QueryOptionsType = {
   where?: WhereOptions;
 };
 
+/**
+ * @class APIFeatures
+ * @description Provides a fluent interface for building and executing complex queries with Sequelize.
+ * Supports searching, filtering, sorting, limiting fields, and pagination.
+ *
+ * @template T - A generic type parameter extending `Model`, allowing any subclass of `Model` to be used with this class.
+ *
+ * @param {typeof Model & (new () => T)} model - The Sequelize model class to perform queries on.
+ * @param {QueryString} queryStr - An object containing query parameters from the request.
+ */
 class APIFeatures<T extends Model> {
   // `T` is a generic type param extending `Model`: any subclass of `Model` can be used
   private model: typeof Model & (new () => T);
@@ -29,7 +39,14 @@ class APIFeatures<T extends Model> {
     this.queryStr = queryStr;
   }
 
-  search(strategy?: SearchStrategyType) {
+  /**
+   * @method search
+   * @description Adds search functionality to the query based on a provided strategy.
+   *
+   * @param {SearchStrategyType} [strategy] - Optional. The search strategy to use.
+   * @returns {APIFeatures} - Returns the instance of APIFeatures for method chaining.
+   */
+  search(strategy?: SearchStrategyType): APIFeatures<T> {
     if (this.queryStr.q) {
       const searchStrategy = SearchStrategyFactory.getSearchStrategy(
         this.model,
@@ -43,7 +60,13 @@ class APIFeatures<T extends Model> {
     return this;
   }
 
-  filter() {
+  /**
+   * @method filter
+   * @description Filters the query based on the query parameters, excluding predefined fields.
+   *
+   * @returns {APIFeatures} - Returns the instance of APIFeatures for method chaining.
+   */
+  filter(): APIFeatures<T> {
     const queryObj = { ...this.queryStr };
     const excludedFields = ["page", "perpage", "sort", "fields", "q"];
     excludedFields.forEach((el) => delete queryObj[el]);
@@ -99,7 +122,13 @@ class APIFeatures<T extends Model> {
     return this;
   }
 
-  sort() {
+  /**
+   * @method sort
+   * @description Sorts the query results based on the 'sort' query parameter.
+   *
+   * @returns {APIFeatures} - Returns the instance of APIFeatures for method chaining.
+   */
+  sort(): APIFeatures<T> {
     if (this.queryStr.sort) {
       const sortBy = this.queryStr.sort.split(",").map((item) => {
         let order = "ASC";
@@ -115,7 +144,13 @@ class APIFeatures<T extends Model> {
     return this;
   }
 
-  limitFields() {
+  /**
+   * @method limitFields
+   * @description Limits the fields to be returned in the query results based on the 'fields' query parameter.
+   *
+   * @returns {APIFeatures} - Returns the instance of APIFeatures for method chaining.
+   */
+  limitFields(): APIFeatures<T> {
     if (this.queryStr.fields) {
       const fields = this.queryStr.fields.split(",");
       console.log(fields);
@@ -124,7 +159,13 @@ class APIFeatures<T extends Model> {
     return this;
   }
 
-  paginate() {
+  /**
+   * @method paginate
+   * @description Applies pagination to the query based on 'page' and 'perpage' query parameters.
+   *
+   * @returns {APIFeatures} - Returns the instance of APIFeatures for method chaining.
+   */
+  paginate(): APIFeatures<T> {
     const page = +this.queryStr.page || 1;
     const limit = +this.queryStr.perpage || 20;
     const offset = (page - 1) * limit;
@@ -135,7 +176,13 @@ class APIFeatures<T extends Model> {
     return this;
   }
 
-  async execute() {
+  /**
+   * @method execute
+   * @description Executes the built query and returns the result along with pagination information.
+   *
+   * @returns {Promise<{data: T[], pagination: Object}>} - A promise that resolves to the query result and pagination info.
+   */
+  async execute(): Promise<{ data: T[]; pagination: Object }> {
     const result = await this.model.findAndCountAll({
       ...this.queryOptions,
       logging: console.log

@@ -3,6 +3,6 @@ dist/
 .env
 .vscode/
 logs/
-src/config/development.json
+src/configs/development.json
 coverage/
 public

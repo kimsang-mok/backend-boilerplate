@@ -1,4 +1,4 @@
-import Controller from "@config/controller";
+import Controller from "@configs/controller";
 import { Request, Response } from "express";
 import taskService from "./task.service";
 

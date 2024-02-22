@@ -13,6 +13,9 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
+      "@src/*": [
+        "src/*"
+      ],
       "@modules/*": [
         "src/modules/*"
       ],
@@ -22,8 +25,8 @@
       "@utils/*": [
         "src/utils/*"
       ],
-      "@config/*": [
-        "src/config/*"
+      "@configs/*": [
+        "src/configs/*"
       ]
     },
     "experimentalDecorators": true

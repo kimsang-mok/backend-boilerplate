@@ -38,7 +38,7 @@ export const morganMiddleware = () => {
     if (statusCode < 400) {
       logger.info(logMessage);
     } else {
-      logger.info(logMessage); // Log as informational for other status codes
+      logger.error(logMessage); // Log as error for other status codes
     }
 
     // Return `undefined` to indicate that logging is handled internally.

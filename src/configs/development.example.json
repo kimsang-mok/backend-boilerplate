@@ -1,0 +1,15 @@
+{
+  "NODE_ENV": "production",
+  "PORT": "3000",
+  "BASE_URL": "https://localhost:3000",
+  "DB": {
+    "USERNAME": "root",
+    "PASSWORD": "kimsangkafka",
+    "NAME": "riem_app",
+    "HOSTNAME": "localhost",
+    "DIALECT": "mysql"
+  },
+  "CORS": {
+    "WHITE_LIST": ["http://localhost:5173"]
+  }
+}

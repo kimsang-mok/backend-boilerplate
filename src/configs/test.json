@@ -5,11 +5,11 @@
   "DB": {
     "USERNAME": "",
     "PASSWORD": "",
-    "NAME": ":memory:",
+    "NAME": "./src/tests/database_test.sqlite",
     "HOSTNAME": "",
     "DIALECT": "sqlite"
   },
   "CORS": {
-    "WHITE_LIST": [""]
+    "WHITE_LIST": ["http://localhost:5173"]
   }
 }

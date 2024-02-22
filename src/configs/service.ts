@@ -1,9 +1,18 @@
-import db from "./sequelize";
+import APIError from "@src/utils/APIError";
 import APIFeatures from "@utils/APIFeatures";
 import { RequestQuery } from "src/interfaces/http";
+import { notFound } from "@src/middlewares/error";
 
 export default abstract class Service<T> {
   protected abstract model: any;
+
+  protected handleNotFound(): never {
+    throw new APIError({
+      status: 404,
+      message: "Not found!",
+      errors: []
+    });
+  }
 
   async get(query: RequestQuery): Promise<any> {
     const apiFeatures = new APIFeatures(this.model, query)
@@ -15,8 +24,12 @@ export default abstract class Service<T> {
     return await apiFeatures.execute();
   }
 
-  async getById(id: string): Promise<T | null> {
-    return await this.model.findByPk(id);
+  async getById(id: string): Promise<T> {
+    const result = await this.model.findByPk(id);
+    if (!result) {
+      this.handleNotFound();
+    }
+    return result;
   }
 
   async create(data: T): Promise<T> {
